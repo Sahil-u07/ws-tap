@@ -56,6 +56,23 @@ Events then scroll by in the viewer, colour-coded: `IN` green, `OUT` cyan, `disc
 - Several servers can stream to the same viewer.
 - The viewer only listens on `127.0.0.1`, and redaction and truncation happen inside your app before anything is sent.
 
+### Pause and filter
+
+While the viewer is running:
+
+| Key | What it does |
+|-----|--------------|
+| `p` or space | Pause / resume. Events that arrive while paused are held (up to 1000) and printed when you resume. |
+| `f` or `/` | Set a filter, then press Enter. Esc keeps the old one, and an empty filter shows everything. |
+| `q` or Ctrl+C | Quit. |
+
+Filters:
+
+- `chat` shows only events whose name contains `chat` (not case-sensitive).
+- `@abc` shows only sockets whose id starts with `abc` (the ids are the coloured column).
+
+You can also start with a filter: `npx ws-tap --filter chat` or `npx ws-tap -f @abc`.
+
 ## Options
 
 | Option      | Default                              | What it does |
@@ -105,7 +122,7 @@ npm test
 ## Roadmap
 
 - ~~**v2**: a terminal viewer with a scrolling, colour-coded event list.~~ Done.
-- **v3**: filter by event or socket, and pause/resume the stream.
+- ~~**v3**: filter by event or socket, and pause/resume the stream.~~ Done.
 
 ## License
 
