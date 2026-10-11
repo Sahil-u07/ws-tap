@@ -6,6 +6,8 @@
 
 See live Socket.IO traffic while you develop, either in your console or in a separate terminal viewer you can pause and filter.
 
+![ws-tap demo: events streaming into the viewer, pausing and filtering](docs/demo.gif)
+
 Every event a client sends, every event your server emits (including `io.emit` and room broadcasts), and every disconnect shows up as one line. No browser devtools digging, no `console.log` sprinkled through your handlers.
 
 ## Install
