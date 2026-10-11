@@ -1,6 +1,6 @@
 {
   "name": "ws-tap",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Print live Socket.IO traffic to your console while you develop",
   "main": "index.js",
   "bin": {

@@ -24,8 +24,8 @@ function startServer(opts, onConnection) {
 }
 
 // Start the viewer on a random port; resolves with its port and a live view of its output.
-function startViewer() {
-  viewer = spawn(process.execPath, [path.join(__dirname, '..', 'bin', 'ws-tap.js'), '--port', '0']);
+function startViewer(...args) {
+  viewer = spawn(process.execPath, [path.join(__dirname, '..', 'bin', 'ws-tap.js'), '--port', '0', ...args]);
   const out = { text: '' };
   viewer.stdout.on('data', (d) => (out.text += d));
   return new Promise((resolve) => {
@@ -83,4 +83,51 @@ test('viewer mode does not also log to the console unless log is given', async (
     console.log = original;
   }
   assert.ok(!lines.some((l) => String(l).startsWith('[ws-tap]')), lines.join('\n'));
+});
+
+const reply = (c, event, data) => new Promise((r) => { c.once('reply', r); c.emit(event, data); });
+const echo = (s) => s.onAny(() => s.emit('reply'));
+
+test('--filter shows only matching event names', async () => {
+  const { port, out } = await startViewer('--filter', 'chat');
+  client = connect(await startServer({ viewer: port }, echo));
+  await reply(client, 'other');
+  await reply(client, 'chat');
+  await until(() => /IN\s+chat/.test(out.text));
+  assert.ok(!out.text.includes('other'), out.text);
+  assert.ok(!/OUT reply/.test(out.text), out.text);
+});
+
+test('f then @id filters to one socket', async () => {
+  const { port, out } = await startViewer();
+  const url = await startServer({ viewer: port }, echo);
+  client = connect(url);
+  const other = connect(url);
+  await Promise.all([reply(client, 'warmup'), reply(other, 'warmup')]);
+
+  const prefix = client.id.slice(0, 4);
+  viewer.stdin.write(`f@${prefix}\n`);
+  await until(() => out.text.includes(`filter: @${prefix}`));
+  await reply(other, 'from-other');
+  await reply(client, 'from-mine');
+  other.close();
+
+  await until(() => out.text.includes('from-mine'));
+  assert.ok(!out.text.includes('from-other'), out.text);
+});
+
+test('p pauses the stream and resuming prints what was held', async () => {
+  const { port, out } = await startViewer();
+  client = connect(await startServer({ viewer: port }, echo));
+  await reply(client, 'warmup');
+  await until(() => out.text.includes('warmup'));
+
+  viewer.stdin.write('p');
+  await until(() => out.text.includes('paused'));
+  await reply(client, 'while-paused');
+  await new Promise((r) => setTimeout(r, 200));
+  assert.ok(!out.text.includes('while-paused'), out.text);
+
+  viewer.stdin.write('p');
+  await until(() => out.text.includes('while-paused'));
 });
