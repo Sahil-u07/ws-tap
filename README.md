@@ -1,8 +1,8 @@
 # ws-tap
 
 [![test](https://github.com/Sahil-u07/ws-tap/actions/workflows/test.yml/badge.svg)](https://github.com/Sahil-u07/ws-tap/actions/workflows/test.yml)
-[![npm](https://img.shields.io/npm/v/ws-tap)](https://www.npmjs.com/package/ws-tap)
-[![license](https://img.shields.io/npm/l/ws-tap)](LICENSE)
+[![npm](https://img.shields.io/npm/v/@sahil-u07/ws-tap)](https://www.npmjs.com/package/@sahil-u07/ws-tap)
+[![license](https://img.shields.io/npm/l/@sahil-u07/ws-tap)](LICENSE)
 
 See live Socket.IO traffic while you develop, either in your console or in a separate terminal viewer you can pause and filter.
 
@@ -11,7 +11,7 @@ Every event a client sends, every event your server emits (including `io.emit` a
 ## Install
 
 ```bash
-npm install --save-dev ws-tap
+npm install --save-dev @sahil-u07/ws-tap
 ```
 
 Needs `socket.io` 4.5 or newer (it uses `socket.onAnyOutgoing`) and Node 22.13 or newer. No other dependencies.
@@ -20,7 +20,7 @@ Needs `socket.io` 4.5 or newer (it uses `socket.onAnyOutgoing`) and Node 22.13 o
 
 ```js
 const { Server } = require('socket.io');
-const tap = require('ws-tap');
+const tap = require('@sahil-u07/ws-tap');
 
 const io = new Server(3000);
 io.use(tap());
@@ -45,6 +45,8 @@ If your server already prints a lot, send the traffic to its own terminal instea
 ```bash
 npx ws-tap
 ```
+
+(That works in a project where ws-tap is installed. Without installing, use `npx @sahil-u07/ws-tap`.)
 
 and turn on `viewer` in your server:
 

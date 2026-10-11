@@ -2,6 +2,7 @@
 
 ## 0.3.0
 
+- First release on npm, as `@sahil-u07/ws-tap`. The viewer command is still `ws-tap`.
 - Viewer: `p` / space pauses and resumes. Events that arrive while paused are held (up to 1000) and printed on resume.
 - Viewer: `f` / `/` sets a filter. `chat` matches event names, `@abc` matches socket ids. Also available at startup as `--filter`.
 - Viewer ignores lines that aren't ws-tap entries.

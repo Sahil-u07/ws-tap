@@ -1,5 +1,5 @@
 {
-  "name": "ws-tap",
+  "name": "@sahil-u07/ws-tap",
   "version": "0.3.0",
   "description": "See live Socket.IO traffic while you develop: a console logger plus a terminal viewer with pause and filters",
   "main": "index.js",
