@@ -1,11 +1,15 @@
 {
   "name": "ws-tap",
   "version": "0.3.0",
-  "description": "Print live Socket.IO traffic to your console while you develop",
+  "description": "See live Socket.IO traffic while you develop: a console logger plus a terminal viewer with pause and filters",
   "main": "index.js",
   "bin": {
     "ws-tap": "bin/ws-tap.js"
   },
+  "files": [
+    "index.js",
+    "bin/"
+  ],
   "scripts": {
     "test": "node --test",
     "example": "node example/server.js",
@@ -13,20 +17,33 @@
   },
   "keywords": [
     "socket.io",
-    "debug",
+    "socketio",
     "websocket",
-    "middleware"
+    "debug",
+    "devtools",
+    "logger",
+    "middleware",
+    "viewer",
+    "cli"
   ],
   "author": "Sahil Lenka",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sahil-u07/ws-tap.git"
+  },
+  "homepage": "https://github.com/Sahil-u07/ws-tap#readme",
+  "bugs": {
+    "url": "https://github.com/Sahil-u07/ws-tap/issues"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
   "peerDependencies": {
     "socket.io": ">=4.5"
   },
   "devDependencies": {
     "socket.io": "^4.8.4",
     "socket.io-client": "^4.8.4"
-  },
-  "engines": {
-    "node": ">=20.12"
   }
 }
