@@ -1,3 +1,5 @@
+const net = require('net');
+
 const SECRET_KEYS = /^(password|token|secret|authorization)$/i;
 
 // Copy a payload into something safe to JSON.stringify: secrets hidden,
@@ -30,15 +32,33 @@ function format(args, maxLength) {
   return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
 }
 
+// Streams entries to a running `ws-tap` viewer as JSON lines; drops them while none is listening.
+function connectViewer(port) {
+  let conn = null;
+  let nextTry = 0;
+  return (entry) => {
+    if (!conn && Date.now() >= nextTry) {
+      nextTry = Date.now() + 1000;
+      conn = net.connect(port, '127.0.0.1').unref(); // never keep the host process alive
+      conn.on('error', () => {}).on('close', () => (conn = null));
+    }
+    if (conn && conn.writableLength < 1e6) conn.write(JSON.stringify(entry) + '\n'); // drop if the viewer falls behind
+  };
+}
+
 function tap(options = {}) {
-  const { maxLength = 200, log = console.log } = options;
+  const { maxLength = 200, viewer } = options;
+  const log = options.log ?? (viewer ? null : console.log);
   const enabled = options.enabled ?? process.env.NODE_ENV !== 'production';
   if (!enabled) return (socket, next) => next();
 
-  const print = (socket, ...parts) => {
+  const send = viewer && connectViewer(viewer === true ? 4400 : viewer);
+
+  const print = (socket, dir, event, payload) => {
     try {
-      const time = new Date().toISOString().slice(11, 23);
-      log(['[ws-tap]', time, socket.id.slice(0, 6), ...parts].filter(Boolean).join(' '));
+      const entry = { time: new Date().toISOString().slice(11, 23), id: socket.id.slice(0, 6), dir, event, payload };
+      if (send) send(entry);
+      if (log) log(['[ws-tap]', entry.time, entry.id, dir, event, payload].filter(Boolean).join(' '));
     } catch {
       // a logging problem must never reach the host app
     }
@@ -48,7 +68,7 @@ function tap(options = {}) {
     try {
       socket.onAny((event, ...args) => print(socket, 'IN', event, format(args, maxLength)));
       socket.onAnyOutgoing((event, ...args) => print(socket, 'OUT', event, format(args, maxLength)));
-      socket.on('disconnect', (reason) => print(socket, 'disconnect', reason));
+      socket.on('disconnect', (reason) => print(socket, 'disconnect', '', reason));
     } catch {
       // never block a connection because of the tap
     }
