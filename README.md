@@ -10,7 +10,7 @@ Every event a client sends, every event your server emits (including `io.emit` a
 npm install --save-dev ws-tap
 ```
 
-Needs `socket.io` 4.5 or newer (it uses `socket.onAnyOutgoing`).
+Needs `socket.io` 4.5 or newer (it uses `socket.onAnyOutgoing`) and Node 20.12 or newer.
 
 ## Usage
 
@@ -34,13 +34,36 @@ That's it.
 
 Format: `[ws-tap] <time> <first 6 chars of socket id> IN|OUT <event> <payload>`.
 
+## Terminal viewer
+
+If your server already prints a lot, send the traffic to its own terminal instead. Start the viewer:
+
+```bash
+npx ws-tap
+```
+
+and turn on `viewer` in your server:
+
+```js
+io.use(tap({ viewer: true }));
+```
+
+Events then scroll by in the viewer, colour-coded: `IN` green, `OUT` cyan, `disconnect` red, and each socket id gets its own colour so you can follow one client among many. Your server console stays quiet.
+
+- Start the viewer and your server in either order. ws-tap connects when the viewer comes up and reconnects if you restart it.
+- If no viewer is running, events are just dropped. Nothing is buffered and your app isn't affected.
+- Use another port with `npx ws-tap --port 5000` and `tap({ viewer: 5000 })`. The default is 4400.
+- Several servers can stream to the same viewer.
+- The viewer only listens on `127.0.0.1`, and redaction and truncation happen inside your app before anything is sent.
+
 ## Options
 
 | Option      | Default                              | What it does |
 |-------------|--------------------------------------|--------------|
 | `enabled`   | `true` unless `NODE_ENV=production`  | Force logging on or off. |
 | `maxLength` | `200`                                | Payloads longer than this are cut and end with `…`. |
-| `log`       | `console.log`                        | Where each line goes. Gets one string per event. |
+| `log`       | `console.log` (none when `viewer` is set) | Where each line goes. Gets one string per event. |
+| `viewer`    | off                                  | `true` or a port number: stream events to `npx ws-tap`. |
 
 ```js
 io.use(tap({ maxLength: 500, log: (line) => logger.debug(line) }));
@@ -71,6 +94,8 @@ node example/client.js
 
 The client sends `chat` every second and the server replies with `chat-reply`, and you'll see both directions in the server terminal.
 
+To try the viewer instead, run `npm run viewer` in one terminal, `node example/server.js --viewer` in another, and the client in a third.
+
 ## Tests
 
 ```bash
@@ -79,7 +104,7 @@ npm test
 
 ## Roadmap
 
-- **v2**: a terminal viewer with a scrolling, colour-coded event list.
+- ~~**v2**: a terminal viewer with a scrolling, colour-coded event list.~~ Done.
 - **v3**: filter by event or socket, and pause/resume the stream.
 
 ## License
