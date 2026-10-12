@@ -13,7 +13,8 @@
   "scripts": {
     "test": "node --test",
     "example": "node example/server.js",
-    "viewer": "node bin/ws-tap.js"
+    "viewer": "node bin/ws-tap.js",
+    "bench": "node bench/throughput.js"
   },
   "keywords": [
     "socket.io",

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="240" viewBox="0 0 760 240" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <text x="0" y="22" font-size="17" font-weight="600" fill="#e6edf3">Socket.IO round trips per second</text>
+  <text x="0" y="42" font-size="13" fill="#9198a1">higher is better · each round trip = 1 IN + 1 OUT event logged</text>
+  <line x1="150" y1="54" x2="150" y2="188" stroke="#30363d"/>
+  <text x="138" y="78" text-anchor="end" font-size="15" fill="#e6edf3">no ws-tap</text>
+  <rect x="150" y="62" width="470" height="24" rx="5" fill="#8b949e"/>
+  <text x="630" y="79" font-size="14" fill="#e6edf3" font-weight="600">24,611<tspan fill="#9198a1" font-weight="400"></tspan></text>
+  <text x="138" y="124" text-anchor="end" font-size="15" fill="#e6edf3">console mode</text>
+  <rect x="150" y="108" width="330" height="24" rx="5" fill="#4493f8"/>
+  <text x="490" y="125" font-size="14" fill="#e6edf3" font-weight="600">17,281<tspan fill="#9198a1" font-weight="400"> (−30%)</tspan></text>
+  <text x="138" y="170" text-anchor="end" font-size="15" fill="#e6edf3">viewer mode</text>
+  <rect x="150" y="154" width="312" height="24" rx="5" fill="#3fb950"/>
+  <text x="472" y="171" font-size="14" fill="#e6edf3" font-weight="600">16,329<tspan fill="#9198a1" font-weight="400"> (−34%)</tspan></text>
+  <text x="0" y="230" font-size="12" fill="#9198a1">Node 22.16.0 · socket.io 4.8.4 · 20,000 events · median of 5 runs · one laptop, so treat it as a rough guide</text>
+</svg>
