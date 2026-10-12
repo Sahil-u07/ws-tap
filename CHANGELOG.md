@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1
+
+- Faster: the timestamp is built once per millisecond instead of once per event, and each line is written in one pass that stops at `maxLength`. In `npm run bench` (same laptop, same session, median of 7 interleaved runs) console mode went from 21,395 to 24,101 round trips per second (+13%) and viewer mode from 21,340 to 26,865 (+26%).
+- Viewer mode with no viewer running now skips formatting entirely.
+- Huge payloads are no longer fully read and stringified just to be truncated: reading stops at `maxLength`.
+- A payload that can't be serialized (like a BigInt) can no longer throw into the host app.
+- Output is unchanged. A new test checks the formatter against the previous one on 3,000 random payloads.
+
 ## 0.3.0
 
 - First release on npm, as `@sahil-u07/ws-tap`. The viewer command is still `ws-tap`.

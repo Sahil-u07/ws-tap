@@ -220,11 +220,13 @@ It's a dev tool, but I still wanted to know what it costs, so there's a benchmar
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/benchmark-dark.svg">
-    <img src="docs/benchmark-light.svg" alt="Benchmark: no ws-tap 24,611 round trips per second, console mode 17,281 (30% fewer), viewer mode 16,329 (34% fewer)" width="760">
+    <img src="docs/benchmark-light.svg" alt="Benchmark, 0.3.0 vs 0.3.1: console mode 21,395 to 24,101 round trips per second (13% more), viewer mode 21,340 to 26,865 (26% more)" width="760">
   </picture>
 </p>
 
-At full speed that's about **10 µs per logged event**. A busy dev server doing 1,000 events a second spends roughly 1% of one CPU core on ws-tap, and in production it costs nothing because it's switched off. Run it yourself with `npm run bench`.
+In this session that works out to about **13-15 µs per logged event** for 0.3.1, down from about 18 µs for 0.3.0. A busy dev server doing 1,000 events a second spends roughly 1% of one CPU core on ws-tap. With viewer mode on and no viewer running it does no formatting at all, and in production it costs nothing because it's switched off.
+
+0.3.1 got faster by building the timestamp once per millisecond instead of once per event, and by writing each line in a single pass that stops at `maxLength` (so a huge payload is barely read). Run it yourself with `npm run bench`. On laptops, compare runs from the same session: the benchmark measures "no ws-tap" first, so the ws-tap modes can end up running on a CPU that has already left turbo.
 
 ## How it compares
 
